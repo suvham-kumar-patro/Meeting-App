@@ -26,9 +26,9 @@ export const routes: Routes = [
         component: MeetingsComponent,
         title:"meetings"
     },
-  { 
+    { 
     path: "teams", 
     component: TeamsComponent,
     title:"teams"
-}
-    ];
+    }
+];

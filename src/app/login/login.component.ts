@@ -38,12 +38,6 @@ export class LoginComponent {
 
   toggleForm(form: 'login' | 'register') {
     this.activeForm = form;
-    // Update the URL when the form switches
-    if (form === 'login') {
-      this.router.navigate(['/login']);
-    } else {
-      this.router.navigate(['/register']);
-    }
   }
 
   login() {
@@ -62,7 +56,7 @@ export class LoginComponent {
       alert('Registration successful! Please log in.');
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 10);
       this.router.navigate(['/login']); // After successful registration
     } else {
       alert('Please fill in all fields correctly!');
