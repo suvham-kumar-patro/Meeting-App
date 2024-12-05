@@ -1,16 +1,21 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-// import { NavbarComponent } from './navbar/navbar.component';
-// import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './login/login.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, LoginComponent, NavbarComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'meeting-app';
+  isLoggedIn = false;
+
+  // Handle login event
+  handleLoginEvent() {
+    this.isLoggedIn = true; // Set isLoggedIn to true when login happens
+  }
 }

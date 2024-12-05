@@ -16,7 +16,6 @@ export const routes: Routes = [
         component: LoginComponent,
         title:'Login page'
     },
-  // { path: "register", component: LoginComponent },
     { 
         path: "calendar",
         component: CalendarComponent,
@@ -32,5 +31,4 @@ export const routes: Routes = [
     component: TeamsComponent,
     title:"teams"
 }
-    // {path:'meeting-app',loadChildren:()=> import('./meeting-app.module').then(m=> m.MeetingAppModule)}
     ];

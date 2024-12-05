@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -9,16 +9,16 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
+  @Output() loginEvent = new EventEmitter<void>();  // Event emitter for login
   loginForm: any;
   registerForm: any;
   activeForm: 'login' | 'register' = 'login';
 
   constructor(
     private fb: FormBuilder,
-    // private route: ActivatedRoute,
     private router: Router
   ) {}
 
@@ -49,7 +49,8 @@ export class LoginComponent {
   login() {
     if (this.loginForm.valid) {
       console.log('Login info:', this.loginForm.value);
-      this.router.navigate(['/calendar']); 
+      this.router.navigate(['/calendar']);
+      this.loginEvent.emit();  // Emit login event to parent component
     } else {
       alert('Invalid email or password!');
     }
