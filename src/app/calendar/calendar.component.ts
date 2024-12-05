@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 // import { RouterLink, RouterLinkActive } from '@angular/router';
-import { NavbarComponent } from '../navbar/navbar.component';
+// import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-calendar',
-  imports: [NavbarComponent],
+  imports: [],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss'
 })
