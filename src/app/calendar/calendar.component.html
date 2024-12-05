@@ -1,26 +1,68 @@
 <app-navbar></app-navbar>
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h4>Calendar</h4>
-      <div class="d-flex align-items-center">
-        <input
-          type="date"
-          class="form-control"
-          [(ngModel)]="selectedDate"
-          style="max-width: 200px;"
-        />
-      </div>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Calendar</h4>
+    <div class="d-flex align-items-center">
+      <input
+        type="date"
+        class="form-control"
+        [(ngModel)]="selectedDate"
+        (change)="onDateChange()"
+        style="max-width: 200px;"
+      />
     </div>
-    <div class="border p-3 bg-light">
-      <h5 class="text-center">{{ selectedDate | date: 'fullDate' }}</h5>
-      <div class="d-flex flex-column mt-3">
-        <div
-          class="time-slot d-flex align-items-center border-bottom"
-          *ngFor="let time of timeSlots"
-        >
-          <div class="time-label me-3">{{ time }}</div>
-          <div class="flex-fill"></div>
+  </div>
+  
+  <div class="border p-3 bg-light">
+    <h5 class="text-center">{{ selectedDate | date: 'fullDate' }}</h5>
+    <div class="d-flex flex-column mt-3">
+      <div
+        class="time-slot d-flex align-items-center border-bottom"
+        *ngFor="let time of timeSlots"
+      >
+        <div class="time-label me-3">{{ time }}</div>
+        <div class="flex-fill">
+          <!-- Check if there is a meeting for this time slot -->
+          <div *ngIf="getMeetingForSlot(time)" class="meeting-details p-2">
+            <div class="meeting-title font-weight-bold">{{ getMeetingForSlot(time).title }}</div>
+            <div class="meeting-attendees">Attendees: {{ getMeetingForSlot(time).attendees.join(', ') }}</div>
+          </div>
+          <!-- <div *ngIf="!getMeetingForSlot(time)" class="no-meeting p-2">
+            No meeting scheduled
+          </div> -->
         </div>
       </div>
     </div>
   </div>
+</div>
+
+
+
+
+
+
+<!-- <div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Calendar</h4>
+    <div class="d-flex align-items-center">
+      <input
+        type="date"
+        class="form-control"
+        [(ngModel)]="selectedDate"
+        style="max-width: 200px;"
+      />
+    </div>
+  </div>
+  <div class="border p-3 bg-light">
+    <h5 class="text-center">{{ selectedDate | date: 'fullDate' }}</h5>
+    <div class="d-flex flex-column mt-3">
+      <div
+        class="time-slot d-flex align-items-center border-bottom"
+        *ngFor="let time of timeSlots"
+      >
+        <div class="time-label me-3">{{ time }}</div>
+        <div class="flex-fill"></div>
+      </div>
+    </div>
+  </div>
+</div> -->
