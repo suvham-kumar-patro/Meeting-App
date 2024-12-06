@@ -31,6 +31,7 @@ export class MeetingsComponent implements OnInit {
       date: ['', Validators.required],
       startTime: ['', Validators.required],
       endTime: ['', Validators.required],
+      description: ['', Validators.required], // Added description form control
       attendees: this.fb.array([this.fb.control('', Validators.email)])
     });
   }
@@ -51,6 +52,7 @@ export class MeetingsComponent implements OnInit {
         startTime: '06:00',
         endTime: '07:00',
         title: 'Project Kickoff',
+        description: 'Kickoff meeting to discuss project goals',
         attendees: ['mark@example.com', 'jane@example.com']
       },
       {
@@ -59,6 +61,7 @@ export class MeetingsComponent implements OnInit {
         startTime: '08:00',
         endTime: '09:30',
         title: 'AWS Architecture',
+        description: 'Meeting about cloud architecture',
         attendees: ['john@example.com', 'jane@example.com']
       }
     ];

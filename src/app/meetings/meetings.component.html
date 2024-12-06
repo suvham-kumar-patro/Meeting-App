@@ -18,7 +18,7 @@
             <option value="upcoming">UPCOMING</option>
           </select>
         </div>
-         
+
         <div class="col-md-7">
           <label for="keywords" class="form-label">Search for</label>
           <input
@@ -29,7 +29,7 @@
             placeholder="Search using words which describe the meeting"
           />
         </div>
-         
+
         <div class="col-md-2 d-flex align-items-end">
           <button type="submit" class="btn btn-primary w-100">Search</button>
         </div>
@@ -62,15 +62,26 @@
         </div>
 
         <div class="col-md-12">
+          <label for="description" class="form-label">Description</label>
+          <textarea
+            class="form-control"
+            formControlName="description"
+            id="description"
+            placeholder="What is the agenda of the meeting?"
+            rows="4"
+          ></textarea>
+        </div>
+
+        <div class="col-md-12">
           <div formArrayName="attendees">
             <div *ngFor="let attendee of attendees.controls; let i = index" class="row mb-2">
-                <div class="col-md-10">
-                  <input type="email" class="form-control" [formControlName]="i" placeholder="Attendee Email" />
-                </div>
-                <div class="col-md-2">
-                  <button type="button" class="btn btn-danger w-100" (click)="removeAttendee(i)">Remove</button>
-                </div>
-              </div>             
+              <div class="col-md-10">
+                <input type="email" class="form-control" [formControlName]="i" placeholder="Attendee Email" />
+              </div>
+              <div class="col-md-2">
+                <button type="button" class="btn btn-danger w-100" (click)="removeAttendee(i)">Remove</button>
+              </div>
+            </div>
           </div>
           <button type="button" class="btn btn-secondary mt-2" (click)="addAttendee()">Add Attendee</button>
         </div>
@@ -103,7 +114,7 @@
             <span class="badge bg-danger me-2">{{ meeting.title }}</span>
             <strong>Attendees:</strong> {{ meeting.attendees.join(', ') }}
           </p>
-           
+
           <div class="row g-3">
             <div class="col-md-6">
               <select class="form-select" (change)="selectAttendee($event, meeting)">
