@@ -43,9 +43,13 @@ export class LoginComponent implements OnInit {
   login() {
     if (this.loginForm.valid) {
       const email = this.loginForm.value.email || '';
-      console.log('Login info:', email);
-      this.authService.setEmail(email);  
-      this.router.navigate(['/calendar']);
+      if (email.endsWith('@gmail.com')) {
+        console.log('Login info:', email);
+        this.authService.setEmail(email);
+        this.router.navigate(['/calendar']);
+      } else {
+        alert('Please enter a valid Gmail address (e.g., example@gmail.com)');
+      }
     } else {
       alert('Invalid email or password!');
     }
