@@ -1,4 +1,3 @@
-<!-- navbar.component.html -->
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
   <div class="container-fluid">
     <div class="collapse navbar-collapse" id="mynavbar">
@@ -14,9 +13,8 @@
         </li>
       </ul>
       
-      <!-- User Profile Section -->
       <div class="navbar-nav ms-auto">
-        <span class="nav-link user-greeting">Hello, <span class="username">John Doe</span></span>
+        <span class="nav-link user-greeting">Hello, <span class="username">{{ email }}</span></span>
         <button class="btn btn-logout" type="button" (click)="onLogout()">Logout</button>
       </div>
     </div>

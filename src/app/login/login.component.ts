@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,19 +12,18 @@ import { RouterModule } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent {
-  @Output() loginEvent = new EventEmitter<void>();  // Event emitter for login
+export class LoginComponent implements OnInit {
   loginForm: any;
   registerForm: any;
   activeForm: 'login' | 'register' = 'login';
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
-  ngOnInit() {
-    // Initialize login and register forms with validations
+  ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
@@ -42,9 +42,10 @@ export class LoginComponent {
 
   login() {
     if (this.loginForm.valid) {
-      console.log('Login info:', this.loginForm.value);
+      const email = this.loginForm.value.email || '';
+      console.log('Login info:', email);
+      this.authService.setEmail(email);  
       this.router.navigate(['/calendar']);
-      this.loginEvent.emit();  // Emit login event to parent component
     } else {
       alert('Invalid email or password!');
     }

@@ -1,5 +1,8 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router'; 
+import { OnInit, OnDestroy } from '@angular/core';
+import { AuthService } from '../auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -7,13 +10,24 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent {
-  @Output() logout = new EventEmitter<void>(); 
+export class NavbarComponent implements OnInit, OnDestroy {
+  email: string = '';
+  private emailSubscription: Subscription = new Subscription();
 
-  constructor(private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.emailSubscription = this.authService.email$.subscribe((email) => {
+      this.email = email || 'Guest';
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.emailSubscription.unsubscribe();
+  }
 
   onLogout(): void {
-    this.logout.emit(); 
+    this.authService.logout();
     this.router.navigate(['/login']); 
   }
 }
