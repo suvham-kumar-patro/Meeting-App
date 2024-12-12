@@ -2,22 +2,41 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private emailSubject = new BehaviorSubject<string>(''); 
-  public email$ = this.emailSubject.asObservable(); 
-  
-  private isLoggedInSubject = new BehaviorSubject<boolean>(false); 
-  public isLoggedIn$ = this.isLoggedInSubject.asObservable(); 
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
-  setEmail(email: string) {
-    this.emailSubject.next(email);
-    this.isLoggedInSubject.next(true);
+  constructor() {
+    if (typeof window !== 'undefined') {
+      const userEmail = localStorage.getItem('userEmail');
+      if (userEmail) {
+        this.isLoggedInSubject.next(true);
+      }
+    }
   }
 
-  logout() {
-    this.emailSubject.next('');
-    this.isLoggedInSubject.next(false);
+  login(email: string): void {
+    if (typeof window !== 'undefined') {
+      if (email) {
+        localStorage.setItem('userEmail', email); 
+        this.isLoggedInSubject.next(true);
+      }
+    }
+  }
+
+  logout(): void {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('userEmail');
+      this.isLoggedInSubject.next(false);
+    }
+  }
+
+  getEmail(): string | null {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('userEmail');
+    }
+    return null;
   }
 }

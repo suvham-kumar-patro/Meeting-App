@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
       const email = this.loginForm.value.email || '';
       if (email.endsWith('@gmail.com')) {
         console.log('Login info:', email);
-        this.authService.setEmail(email);
+        this.authService.login(email);
         this.router.navigate(['/calendar']);
       } else {
         alert('Please enter a valid Gmail address (e.g., example@gmail.com)');
@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
       setTimeout(() => {
         window.location.reload();
       }, 10);
-      this.router.navigate(['/login']); // After successful registration
+      this.router.navigate(['/login']);
     } else {
       alert('Please fill in all fields correctly!');
     }

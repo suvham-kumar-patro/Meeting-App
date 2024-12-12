@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { LoginComponent } from './login/login.component';
@@ -11,13 +11,13 @@ import { AuthService } from './auth.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  isLoggedIn:boolean = false;
-  constructor(private authService: AuthService){}
+export class AppComponent implements OnInit {
+  isLoggedIn: boolean = false;
+  constructor(private authService: AuthService) {}
 
-  ngOnInit():void {
-    this.authService.isLoggedIn$.subscribe(loggedIn => {
-      this.isLoggedIn = loggedIn;
-    })
+  ngOnInit(): void {
+    this.authService.isLoggedIn$.subscribe((loggedInStatus) => {
+      this.isLoggedIn = loggedInStatus;
+    });
   }
 }

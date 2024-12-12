@@ -6,11 +6,11 @@ import { TeamsComponent } from './teams/teams.component';
 
 
 export const routes: Routes = [
-    { 
-        path: '',
-        component:LoginComponent,
-        title:"Login page"
-    } ,
+    // { 
+    //     path: '',
+    //     component:LoginComponent,                // Will use later incase necessary
+    //     title:"Login page"
+    // } ,
     { 
         path: "login",
         component: LoginComponent,
