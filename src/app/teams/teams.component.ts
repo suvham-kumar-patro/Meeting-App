@@ -5,7 +5,8 @@ import { NavbarComponent } from '../navbar/navbar.component';
  
 @Component({
   selector: 'app-teams',
-  imports: [FormsModule, NavbarComponent, CommonModule],
+  standalone: true,
+  imports: [FormsModule, CommonModule],
   templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.scss']
 })

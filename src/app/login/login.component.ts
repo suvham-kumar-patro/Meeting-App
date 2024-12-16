@@ -1,70 +1,74 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { AuthService } from '../auth.service';
-
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthenticationService, ICredentials} from '../common/auth/auth.service';
+ 
 @Component({
   selector: 'app-login',
-  standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
-  loginForm: any;
-  registerForm: any;
-  activeForm: 'login' | 'register' = 'login';
-
+  credentials: ICredentials = {
+    email: 'skp@gmail.com',
+    password: 'Skp@123!',
+  };
+  isRegisterMode = false; // Default to Login mode
+  returnUrl!: string;
   constructor(
-    private fb: FormBuilder,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+    private authenticationService: AuthenticationService
   ) {}
-
+ 
+  authData = {
+    username: '', // Added Username for Register
+    email: '',
+    password: '',
+  };
+ 
+  toggleMode() {
+    this.isRegisterMode = !this.isRegisterMode;
+  }
+ 
   ngOnInit(): void {
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
-    });
-
-    this.registerForm = this.fb.group({
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
-    });
+    // if (this.authenticationService.isLoggedIn()) {
+    //   this.router.navigate([this.returnUrl || '/']);
+    // }
+    // this.returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || '/calendar';
+    // this.activatedRoute.url.subscribe(url => {
+    //   if (url[0].path === '' || url[0].path === 'login') {
+    //     this.isRegisterMode = false;
+    //   } else {
+    //     this.isRegisterMode = true;
+    //   }
+    // });
   }
-
-  toggleForm(form: 'login' | 'register') {
-    this.activeForm = form;
-  }
-
-  login() {
-    if (this.loginForm.valid) {
-      const email = this.loginForm.value.email || '';
-      if (email.endsWith('@gmail.com')) {
-        console.log('Login info:', email);
-        this.authService.login(email);
-        this.router.navigate(['/calendar']);
-      } else {
-        alert('Please enter a valid Gmail address (e.g., example@gmail.com)');
-      }
+ 
+ 
+  onSubmit() {
+    if (this.isRegisterMode) {
+      // Handle registration logic
+      console.log('Registering with:', this.authData);
     } else {
-      alert('Invalid email or password!');
-    }
-  }
-
-  register() {
-    if (this.registerForm.valid) {
-      console.log('Registration info:', this.registerForm.value);
-      alert('Registration successful! Please log in.');
-      setTimeout(() => {
-        window.location.reload();
-      }, 10);
-      this.router.navigate(['/login']);
-    } else {
-      alert('Please fill in all fields correctly!');
+      // Handle login logic
+      console.log('Logging in with:', this.authData);
+      this.authenticationService.login(this.credentials).subscribe({
+        next: (data) => {
+          this.router.navigate(['/calendar']);
+        },
+        error: (error) => {
+          // this.toastService.show({
+          //   templateOrMessage: error.message,
+          //   classname: 'bg-danger text-light',
+          //   delay: 2000,
+          // });
+          console.log(error);
+          // this.loading = false;
+        },
+      });
     }
   }
 }

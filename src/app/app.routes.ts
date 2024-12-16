@@ -3,14 +3,15 @@ import { LoginComponent } from './login/login.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { MeetingsComponent } from './meetings/meetings.component';
 import { TeamsComponent } from './teams/teams.component';
+import { AuthGuard } from './common/auth/auth.guard';
 
 
 export const routes: Routes = [
-    // { 
-    //     path: '',
-    //     component:LoginComponent,                // Will use later incase necessary
-    //     title:"Login page"
-    // } ,
+    { 
+        path: '',
+        component:LoginComponent,                // Will use later incase necessary
+        title:"Login page"
+    } ,
     { 
         path: "login",
         component: LoginComponent,
@@ -19,16 +20,19 @@ export const routes: Routes = [
     { 
         path: "calendar",
         component: CalendarComponent,
-        title:"calendar"
+        title:"calendar",
+        canActivate:[AuthGuard]
     },
     { 
         path: "meetings",
         component: MeetingsComponent,
-        title:"meetings"
+        title:"meetings",
+        canActivate:[AuthGuard]
     },
     { 
-    path: "teams", 
-    component: TeamsComponent,
-    title:"teams"
+        path: "teams", 
+        component: TeamsComponent,
+        title:"teams",
+        canActivate:[AuthGuard]
     }
 ];

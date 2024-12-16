@@ -1,39 +1,49 @@
-<div class="navbar">
-  <h2>
-      MEETING-APP
-  </h2>
-</div>
-<div class="login-container">
-  <!-- Login Form -->
-  <form *ngIf="activeForm === 'login'" [formGroup]="loginForm" (ngSubmit)="login()">
-    <h2>Login</h2>
-    <div class="form-group">
-      <input type="email" formControlName="email" placeholder="Email" />
-    </div>
-    <div class="form-group">
-      <input type="password" formControlName="password" placeholder="Password" />
-    </div>
-    <button type="submit">Login</button>
-    <p (click)="toggleForm('register')">Don't have an account?
-      <span class="highlighted">Register</span>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="auth-container card p-4 shadow-sm">
+    <h2 class="text-center mb-4">{{ isRegisterMode ? 'Register' : 'Login' }}</h2>
+    <form (ngSubmit)="onSubmit()" #authForm="ngForm">
+      <div class="mb-3" *ngIf="isRegisterMode">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          class="form-control"
+          [(ngModel)]="authData.username"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          [(ngModel)]="authData.email"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          [(ngModel)]="authData.password"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary w-100">
+        {{ isRegisterMode ? 'Register' : 'Login' }}
+      </button>
+    </form>
+    <p class="text-center mt-3">
+      {{ isRegisterMode ? 'Already have an account?' : 'Don’t have an account?' }}
+      <a class="text-primary fw-bold" (click)="toggleMode()">
+        {{ isRegisterMode ? 'Login' : 'Register' }}
+      </a>
     </p>
-  </form>
-
-  <!-- Register Form -->
-  <form *ngIf="activeForm === 'register'" [formGroup]="registerForm" (ngSubmit)="register()">
-    <h2>Register</h2>
-    <div class="form-group">
-      <input type="text" formControlName="username" placeholder="Username" />
-    </div>
-    <div class="form-group">
-      <input type="email" formControlName="email" placeholder="Email" />
-    </div>
-    <div class="form-group">
-      <input type="password" formControlName="password" placeholder="Password" />
-    </div>
-    <button type="submit">Register</button>
-    <p (click)="toggleForm('login')">Already have an account?
-      <span class="highlighted">Login</span>
-    </p>
-  </form>
+  </div>
 </div>

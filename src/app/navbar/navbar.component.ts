@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router'; 
 import { OnInit, OnDestroy } from '@angular/core';
-import { AuthService } from '../auth.service';
+import { AuthenticationService } from '../common/auth/auth.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,24 +14,35 @@ export class NavbarComponent implements OnInit, OnDestroy {
   email: string = '';
   private emailSubscription: Subscription = new Subscription();
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthenticationService, private router: Router) {}
 
   ngOnInit(): void {
-    const storedEmail = this.authService.getEmail();
-    this.email = storedEmail ? storedEmail : 'Guest'; 
-
-    this.emailSubscription = this.authService.isLoggedIn$.subscribe((loggedIn) => {
-      if (loggedIn) {
-        this.email = this.authService.getEmail() || 'Guest';
+    this.emailSubscription = this.authService.currentUser.subscribe(user => {
+      if (user) {
+        this.email=user.email;
       } else {
-        this.email = 'Guest';
+        this.email='';
       }
     });
   }
 
+
+    // const storedEmail = this.authService.getEmail();
+    // this.email = storedEmail ? storedEmail : 'Guest'; 
+
+    // this.emailSubscription = this.authService.isLoggedIn$.subscribe((loggedIn) => {
+    //   if (loggedIn) {
+    //     this.email = this.authService.getEmail() || 'Guest';
+    //   } else {
+    //     this.email = 'Guest';
+    //   }
+    // });
+
   ngOnDestroy(): void {
+    if (this.emailSubscription) {
     this.emailSubscription.unsubscribe();
   }
+}
 
   onLogout(): void {
     this.authService.logout();
