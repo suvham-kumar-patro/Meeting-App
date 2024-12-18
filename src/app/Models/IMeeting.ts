@@ -1,16 +1,16 @@
 interface Meeting {
-  id?: number; 
+  id: number; 
   name: string;
   description: string;
   date: string; 
   startTime: string; 
   endTime: string; 
   emails: string;
-  attendees: UserAttendee[]; 
+  attendees?: UserAttendee[]; 
 }
 
 interface UserAttendee{
-  meetingId: number;
+  meetingId:number;
   userId: string,
 }
 

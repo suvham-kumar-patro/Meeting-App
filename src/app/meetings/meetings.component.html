@@ -114,9 +114,9 @@
           </p>
           <div class="row g-3">
             <div class="col-md-6">
-              <select class="form-select">
-                <option selected>Select member</option>
-                <option *ngFor="let user of UserData">
+              <select id="selec" name ="selec" class="form-select" [(ngModel)]="selectedEmail">
+                <option value=""  >Select member</option>
+                <option *ngFor="let user of UserData" [value]="user.email">
                   {{ user.email }}
                 </option>
               </select>

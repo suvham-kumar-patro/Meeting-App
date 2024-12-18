@@ -10,11 +10,6 @@ export class GlobalService {
   private apiUrl = "https://localhost:7150"; 
   constructor(private http: HttpClient) {}
 
-  // getCalenderItems(date:string)
-  // {
-  //   return this.http.get<ICalender[]>(`http://localhost:5000/api/calendar?date=2024-12-13`);
-  // }
-
   getMeetings() {
     return this.http.get<Imeeting[]>(`${this.apiUrl}/api/Meetings`);
   }
@@ -27,6 +22,14 @@ export class GlobalService {
         }
       }
     );
+  }
+
+  addAttendee(attendeeData: { email: string, meetingId: number }): Observable<Imeeting> {
+    return this.http.post<Imeeting>(`${this.apiUrl}/api/Attendee/Add`, attendeeData, {
+      headers:{
+        'Content-Type': 'application/json' 
+      }
+    });
   }
 
   // getTeams(): Observable<any[]> {

@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
     password: 'Skp@123!',
   };
   registerCredentials: ICredentials = {
-    username: 'skp@gmail.com',
+    username: 'skp1@gmail.com',
     password: 'Skp@123!',
     roles: ['Writer'],
   };
@@ -56,22 +56,23 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.isRegisterMode) {
       // Handle registration logic
-      console.log('Registering with:', this.authData);
+      console.log('Registered with:', this.registerCredentials);
+      this.authenticationService.register(this.registerCredentials).subscribe({
+        next: (data) => {
+          this.router.navigate(['/login']);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
     } else {
-      // Handle login logic
       console.log('Logging in with:', this.credentials);
       this.authenticationService.login(this.credentials).subscribe({
         next: (data) => {
           this.router.navigate(['/calendar']);
         },
         error: (error) => {
-          // this.toastService.show({
-          //   templateOrMessage: error.message,
-          //   classname: 'bg-danger text-light',
-          //   delay: 2000,
-          // });
           console.log(error);
-          // this.loading = false;
         },
       });
     }

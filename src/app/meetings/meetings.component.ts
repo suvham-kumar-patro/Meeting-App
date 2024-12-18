@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms'; 
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import Imeeting from '../Models/IMeeting';
@@ -9,7 +9,7 @@ import { GlobalService } from '../Services/global.service';
 @Component({
   selector: 'app-meetings',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,FormsModule],
   templateUrl: './meetings.component.html',
   styleUrl: './meetings.component.scss'
 })
@@ -61,9 +61,22 @@ export class MeetingsComponent implements OnInit {
       alert('Please select an email from the dropdown!');
       return;
     }
-    this.selectedEmail = '';
-    this.filteredMeetings = [...this.meetings];
-  }  
+    const attendeeData = {
+      email: this.selectedEmail,
+      meetingId: meeting.id
+    }
+    this.globalService.addAttendee(attendeeData).subscribe(
+      (response) => {
+        console.log('Attendee added successfully:', response);
+        this.selectedEmail = ''; 
+        meeting.attendees = response.attendees;
+        this.filteredMeetings = [...this.meetings];
+      },
+      (error) => {
+        console.error('Error adding attendee:', error);
+      }
+    );
+  }
 
   loadAttendees(): void {
     this.http.get<any[]>('https://localhost:7150/api/Attendee/users').subscribe({
@@ -136,8 +149,8 @@ export class MeetingsComponent implements OnInit {
     const newMeeting = this.meetingsForm.value;
     const formattedNewMeeting: Imeeting = {
       ...newMeeting,
-      startTime: newMeeting.startTime,  // Keep as string 'HH:mm'
-      endTime: newMeeting.endTime,      // Keep as string 'HH:mm'
+      startTime: newMeeting.startTime,  
+      endTime: newMeeting.endTime,
     };
 
     this.globalService.addMeeting(formattedNewMeeting).subscribe(

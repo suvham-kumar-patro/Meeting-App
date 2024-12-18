@@ -37,7 +37,7 @@ export class AuthenticationService {
       const user = localStorage.getItem(AuthenticationService.KEY_USER);
       return user ? JSON.parse(user) : null;
     }
-    return null;  // For non-browser environments (e.g., server-side rendering)
+    return null;
   }
 
   login(credentials: ICredentials): Observable<ILoginResponse> {
@@ -48,7 +48,6 @@ export class AuthenticationService {
       .pipe(
         map((resp) => {
           if (resp && resp.authToken) {
-            // Store user details and JWT token in local storage
               localStorage.setItem(AuthenticationService.KEY_USER, JSON.stringify(resp));
               this.currentUserSubject.next(resp);
           }
@@ -57,9 +56,20 @@ export class AuthenticationService {
       );
   }
 
+  register(credentials: ICredentials) {
+    return this.http
+      .post(`${apiUrl}/api/Auth/Register`, credentials, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .pipe(
+        map((resp) => {
+          return resp;
+        })
+      );
+  }
+
   logout(): void {
     if (typeof window !== 'undefined') {
-      // Remove user from local storage and set current user to null
       localStorage.removeItem(AuthenticationService.KEY_USER);
       this.currentUserSubject.next(null);
     }
