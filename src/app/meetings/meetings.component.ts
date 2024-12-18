@@ -36,17 +36,18 @@ export class MeetingsComponent implements OnInit {
       startTime: ['', Validators.required],
       endTime: ['', Validators.required],
       description: ['', Validators.required],
-      attendees: this.fb.array([this.fb.control('', Validators.email)]),
+      emails: this.fb.array([this.fb.control('', Validators.email)]),
     });
   }
 
   ngOnInit(): void {
-    this.loadMeetings();
     this.loadAttendees();
+    
+    
   }
 
-  get attendees(): FormArray {
-    return this.meetingsForm.get('attendees') as FormArray;
+  get emails(): FormArray {
+    return this.meetingsForm.get('emails') as FormArray;
   }
 
   excuseYourself(meeting: Imeeting): void {
@@ -67,9 +68,9 @@ export class MeetingsComponent implements OnInit {
   loadAttendees(): void {
     this.http.get<any[]>('https://localhost:7150/api/Attendee/users').subscribe({
       next: (users: any[]) => {
-        console.log('atte',users);
         this.UserData = users;
         console.log('user:',this.UserData);
+        this.loadMeetings();
       },
       error: (err) => {
         console.error('Error loading users:', err);
@@ -92,12 +93,12 @@ export class MeetingsComponent implements OnInit {
   }
 
   getAttendeeEmail(userId: string): string {
-    const user = this.UserData.find(u => u.userId === userId); // Find the user by userId
-    return user ? user.email : 'Email not found'; // Return the email or a default message
+    const user = this.UserData.find(u => u.userId === userId); 
+    return user ? user.email : 'Email not found'; 
   }
 
   getFormattedAttendees(userId:string): string {
-      const user = this.UserData.find(u=> u.userId === userId || 'Unknown User');
+      const user = this.UserData.find(u=> u.userId === userId) || 'Unknown User';
       return user ? user.email : 'Email not found';
   }
 
@@ -142,6 +143,7 @@ export class MeetingsComponent implements OnInit {
     this.globalService.addMeeting(formattedNewMeeting).subscribe(
       (addedMeeting: Imeeting) => {
         this.meetings.push(addedMeeting);
+        console.log(addedMeeting);
         this.filteredMeetings = [...this.meetings];
         this.meetingsForm.reset();
         this.showForm = false;
@@ -153,11 +155,11 @@ export class MeetingsComponent implements OnInit {
   }
 
   addAttendee(): void {
-    this.attendees.push(this.fb.control('', Validators.email));
+    this.emails.push(this.fb.control('', Validators.email));
   }
 
   removeAttendee(index: number): void {
-    this.attendees.removeAt(index);
+    this.emails.removeAt(index);
   }
 
   showAddMeetingForm(): void {

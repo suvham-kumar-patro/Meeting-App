@@ -67,8 +67,8 @@
           ></textarea>
         </div>
         <div class="col-md-12">
-          <div formArrayName="attendees">
-            <div *ngFor="let attendee of attendees.controls; let i = index" class="row mb-2">
+          <div formArrayName="emails">
+            <div *ngFor="let attendee of emails.controls; let i = index" class="row mb-2">
               <div class="col-md-10">
                 <input type="email" class="form-control" [formControlName]="i" placeholder="Attendee Email" />
               </div>
@@ -109,7 +109,7 @@
             {{ meeting.description }}
             <strong>Attendees:</strong>
             <span *ngFor="let attendee of meeting.attendees">
-              {{ getFormattedAttendees(attendee.userId) }}
+              {{getFormattedAttendees(attendee.userId)}}
             </span>
           </p>
           <div class="row g-3">
