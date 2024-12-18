@@ -108,8 +108,26 @@
             <span class="badge bg-danger me-2">{{ meeting.name }}</span>
             {{ meeting.description }}
             <strong>Attendees:</strong>
-            {{ getFormattedAttendees(meeting) }}
+            <span *ngFor="let attendee of meeting.attendees">
+              {{ getFormattedAttendees(attendee.userId) }}
+            </span>
           </p>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <select class="form-select">
+                <option selected>Select member</option>
+                <option *ngFor="let user of UserData">
+                  {{ user.email }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-primary w-100" (click)="addMember(meeting)">Add</button>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-danger w-100" (click)="excuseYourself(meeting)">Excuse yourself</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

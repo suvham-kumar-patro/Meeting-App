@@ -1,32 +1,3 @@
-// interface Attendee {
-//     userId: string;
-//     email: string;
-//   }
-  
-//   interface Time {
-//     hours: number;
-//     minutes: number;
-//   }
-  
-//   interface Meeting {
-//     _id?: string;
-//     name: string;
-//     description: string;
-//     date: string; 
-//     startTime: {
-//         hours: number;
-//         minutes: number;
-//       };
-//       endTime: {
-//         hours: number;
-//         minutes: number;
-//       };
-//     attendees: Attendee[];
-// }
-  
-//   export type { Attendee, Time };
-//   export default Meeting;
-
 interface Meeting {
   id?: number; 
   name: string;
@@ -34,7 +5,14 @@ interface Meeting {
   date: string; 
   startTime: string; 
   endTime: string; 
-  attendees: string[]; 
+  emails: string;
+  attendees: UserAttendee[]; 
 }
 
+interface UserAttendee{
+  meetingId: number;
+  userId: string,
+}
+
+export type {UserAttendee}
 export default Meeting;

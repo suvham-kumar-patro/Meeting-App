@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms'; 
+import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import Imeeting from '../Models/IMeeting';
 import { GlobalService } from '../Services/global.service';
@@ -21,8 +22,9 @@ export class MeetingsComponent implements OnInit {
   showForm: boolean = false;
   selectedAttendee: string = '';
   selectedEmail: string = '';
+  UserData: any[] =[]
 
-  constructor(private fb: FormBuilder, private globalService: GlobalService) {
+  constructor(private fb: FormBuilder, private globalService: GlobalService, private http: HttpClient) {
     this.searchForm = this.fb.group({
       date: ['today'],
       keywords: [''],
@@ -40,10 +42,39 @@ export class MeetingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadMeetings();
+    this.loadAttendees();
   }
 
   get attendees(): FormArray {
     return this.meetingsForm.get('attendees') as FormArray;
+  }
+
+  excuseYourself(meeting: Imeeting): void {
+    console.log(`Excused from meeting: ${meeting.name}`);
+   
+    this.filteredMeetings = [...this.meetings];
+  }
+ 
+  addMember(meeting: Imeeting): void {
+    if (this.selectedEmail.trim() === '') {
+      alert('Please select an email from the dropdown!');
+      return;
+    }
+    this.selectedEmail = '';
+    this.filteredMeetings = [...this.meetings];
+  }  
+
+  loadAttendees(): void {
+    this.http.get<any[]>('https://localhost:7150/api/Attendee/users').subscribe({
+      next: (users: any[]) => {
+        console.log('atte',users);
+        this.UserData = users;
+        console.log('user:',this.UserData);
+      },
+      error: (err) => {
+        console.error('Error loading users:', err);
+      }
+    });
   }
 
   loadMeetings(): void {
@@ -60,37 +91,14 @@ export class MeetingsComponent implements OnInit {
     });
   }
 
-  // getFormattedAttendees(meeting: Imeeting): string {
-  //   if (meeting.attendees && meeting.attendees.length > 0) {
-  //     const attendeeNames = meeting.attendees.map(attendee => this.users[attendee.userId] || 'Unknown User');
-  //     return attendeeNames.join(', ');
-  //   }
-  //   return 'No attendees';
-  // }
+  getAttendeeEmail(userId: string): string {
+    const user = this.UserData.find(u => u.userId === userId); // Find the user by userId
+    return user ? user.email : 'Email not found'; // Return the email or a default message
+  }
 
-  // getFormattedAttendees(meeting: Imeeting, users: { [key: string]: string }): string {
-  //   if (meeting.attendees && meeting.attendees.length > 0) {
-  //     const attendeeNames = meeting.attendees.map(attendeeId => users[attendeeId] || 'Unknown User');
-      
-  //     return attendeeNames.join(', ');
-  //   }
-  //   return 'No attendees'; 
-  // }
-
-  // getFormattedAttendees(meeting: Imeeting): string {
-  //   if (meeting.attendees && meeting.attendees.length > 0) {
-  //     // Map the attendees array and join user ID and email
-  //     return meeting.attendees
-  //       .map(attendee => `ID: ${attendee.id}`)
-  //       .join(', ');
-  //   }
-  //   return 'No attendees';
-  // }
-
-  getFormattedAttendees(meeting: Imeeting): string {
-    return meeting.attendees && meeting.attendees.length > 0
-      ? meeting.attendees.join(', ') // Assuming attendees is a list of emails
-      : 'No attendees';
+  getFormattedAttendees(userId:string): string {
+      const user = this.UserData.find(u=> u.userId === userId || 'Unknown User');
+      return user ? user.email : 'Email not found';
   }
 
   onSearch(): void {
@@ -160,12 +168,5 @@ export class MeetingsComponent implements OnInit {
     this.showForm = false;
     this.meetingsForm.reset();
   }
-
-  // Assuming `meeting.startTime` and `meeting.endTime` are in 'HH:mm' format (e.g., '09:00')
-
-// formatTime(time: string): { hours: number, minutes: number } {
-//   const [hours, minutes] = time.split(':').map(num => parseInt(num, 10));
-//   return { hours, minutes };
-// }
 
 }
