@@ -12,8 +12,13 @@ import { AuthenticationService, ICredentials} from '../common/auth/auth.service'
 })
 export class LoginComponent implements OnInit {
   credentials: ICredentials = {
-    email: 'skp@gmail.com',
+    username: 'skp@gmail.com',
     password: 'Skp@123!',
+  };
+  registerCredentials: ICredentials = {
+    username: 'skp@gmail.com',
+    password: 'Skp@123!',
+    roles: ['Writer'],
   };
   isRegisterMode = false; // Default to Login mode
   returnUrl!: string;
@@ -24,7 +29,7 @@ export class LoginComponent implements OnInit {
   ) {}
  
   authData = {
-    username: '', // Added Username for Register
+    username: '', 
     email: '',
     password: '',
   };
@@ -54,7 +59,7 @@ export class LoginComponent implements OnInit {
       console.log('Registering with:', this.authData);
     } else {
       // Handle login logic
-      console.log('Logging in with:', this.authData);
+      console.log('Logging in with:', this.credentials);
       this.authenticationService.login(this.credentials).subscribe({
         next: (data) => {
           this.router.navigate(['/calendar']);

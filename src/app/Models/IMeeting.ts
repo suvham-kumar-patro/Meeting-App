@@ -1,28 +1,40 @@
-interface Attendee {
-    userId: string;
-    email: string;
-  }
+// interface Attendee {
+//     userId: string;
+//     email: string;
+//   }
   
-  interface Time {
-    hours: number;
-    minutes: number;
-  }
+//   interface Time {
+//     hours: number;
+//     minutes: number;
+//   }
   
-  interface Meeting {
-    _id?: string;
-    name: string;
-    description: string;
-    date: string; 
-    startTime: {
-        hours: number;
-        minutes: number;
-      };
-      endTime: {
-        hours: number;
-        minutes: number;
-      };
-    attendees: Attendee[];
+//   interface Meeting {
+//     _id?: string;
+//     name: string;
+//     description: string;
+//     date: string; 
+//     startTime: {
+//         hours: number;
+//         minutes: number;
+//       };
+//       endTime: {
+//         hours: number;
+//         minutes: number;
+//       };
+//     attendees: Attendee[];
+// }
+  
+//   export type { Attendee, Time };
+//   export default Meeting;
+
+interface Meeting {
+  id?: number; 
+  name: string;
+  description: string;
+  date: string; 
+  startTime: string; 
+  endTime: string; 
+  attendees: string[]; 
 }
-  
-  export type { Attendee, Time };
-  export default Meeting;
+
+export default Meeting;

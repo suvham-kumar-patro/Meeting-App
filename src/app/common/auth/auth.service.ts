@@ -3,17 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-const apiUrl = 'http://localhost:5000';
+const apiUrl = 'https://localhost:7150';
 
 export interface ICredentials {
-  email: string;
+  username: string;
   password: string;
+  roles?: string[];
 }
 
 export interface ILoginResponse {
   email: string;
-  token: string;
-  role: 'admin' | 'general';
+  authToken: string;
+  role: 'Writer' | 'Reader';
 }
 
 @Injectable({
@@ -41,17 +42,15 @@ export class AuthenticationService {
 
   login(credentials: ICredentials): Observable<ILoginResponse> {
     return this.http
-      .post<ILoginResponse>(`${apiUrl}/api/auth/login`, credentials, {
+      .post<ILoginResponse>(`${apiUrl}/api/Auth/Login`, credentials, {
         headers: { 'Content-Type': 'application/json' },
       })
       .pipe(
         map((resp) => {
-          if (resp && resp.token) {
+          if (resp && resp.authToken) {
             // Store user details and JWT token in local storage
-            if (typeof window !== 'undefined') {
               localStorage.setItem(AuthenticationService.KEY_USER, JSON.stringify(resp));
               this.currentUserSubject.next(resp);
-            }
           }
           return resp;
         })

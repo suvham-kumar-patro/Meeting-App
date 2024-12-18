@@ -48,7 +48,7 @@ export class MeetingsComponent implements OnInit {
 
   loadMeetings(): void {
     this.globalService.getMeetings().subscribe({
-      next: (data : Imeeting[]) => {
+      next: (data: Imeeting[]) => {
         this.meetings = data;
         console.log('Meetings loaded:', this.meetings);
         this.filteredMeetings = [...this.meetings];
@@ -60,16 +60,43 @@ export class MeetingsComponent implements OnInit {
     });
   }
 
+  // getFormattedAttendees(meeting: Imeeting): string {
+  //   if (meeting.attendees && meeting.attendees.length > 0) {
+  //     const attendeeNames = meeting.attendees.map(attendee => this.users[attendee.userId] || 'Unknown User');
+  //     return attendeeNames.join(', ');
+  //   }
+  //   return 'No attendees';
+  // }
+
+  // getFormattedAttendees(meeting: Imeeting, users: { [key: string]: string }): string {
+  //   if (meeting.attendees && meeting.attendees.length > 0) {
+  //     const attendeeNames = meeting.attendees.map(attendeeId => users[attendeeId] || 'Unknown User');
+      
+  //     return attendeeNames.join(', ');
+  //   }
+  //   return 'No attendees'; 
+  // }
+
+  // getFormattedAttendees(meeting: Imeeting): string {
+  //   if (meeting.attendees && meeting.attendees.length > 0) {
+  //     // Map the attendees array and join user ID and email
+  //     return meeting.attendees
+  //       .map(attendee => `ID: ${attendee.id}`)
+  //       .join(', ');
+  //   }
+  //   return 'No attendees';
+  // }
+
   getFormattedAttendees(meeting: Imeeting): string {
     return meeting.attendees && meeting.attendees.length > 0
-      ? meeting.attendees.map((attendee: any) => attendee.email).join(', ')
+      ? meeting.attendees.join(', ') // Assuming attendees is a list of emails
       : 'No attendees';
   }
 
   onSearch(): void {
     const { date, keywords } = this.searchForm.value;
     const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-    
+
     this.filteredMeetings = this.meetings.filter((meeting) => {
       const matchesDate =
         date === 'today'
@@ -79,92 +106,35 @@ export class MeetingsComponent implements OnInit {
           : date === 'upcoming'
           ? new Date(meeting.date) > new Date()
           : true;
-  
+
       const matchesKeywords =
         keywords
           ? (meeting.name?.toLowerCase().includes(keywords.toLowerCase()) || 
              (meeting.description && meeting.description?.toLowerCase().includes(keywords.toLowerCase())))
           : true;
-  
+
       return matchesDate && matchesKeywords;
     });
-  
+
     this.showNoMeetingsMessage = this.filteredMeetings.length === 0;
-  }  
-
-  selectAttendee(event: Event, meeting: Imeeting): void {
-    this.selectedAttendee = (event.target as HTMLSelectElement).value;
-  }
-
-  excuseYourself(meeting: Imeeting): void {
-    console.log(`Excused from meeting: ${meeting.name}`);
-    
-    const index = meeting.attendees.findIndex(attendee => attendee.email === this.selectedEmail);
-    if (index !== -1) {
-      meeting.attendees.splice(index, 1);  // Remove specific attendee
-    }
-    this.filteredMeetings = [...this.meetings];
-  }
-
-  addMember(meeting: Imeeting): void {
-    if (this.selectedEmail.trim() === '') {
-      alert('Please select an email from the dropdown!');
-      return;
-    }
-
-    meeting.attendees.push({ userId: '', email: this.selectedEmail.trim() });
-    this.selectedEmail = '';
-    this.filteredMeetings = [...this.meetings];
-  }  
-
-  showAddMeetingForm(): void {
-    this.showForm = true;
   }
 
   addMeeting(): void {
     if (this.meetingsForm.invalid) {
       return;
     }
-  
+
     const newMeeting = this.meetingsForm.value;
-    console.log('Start Time:', newMeeting.startTime);
-    console.log('End Time:', newMeeting.endTime);
-    console.log('Meeting data before submission:', newMeeting);
-  
-    // Extract hours and minutes from startTime and endTime
-    const startTime = newMeeting.startTime;
-    const endTime = newMeeting.endTime;
-  
-    // Function to split time into hours and minutes
-    const extractTime = (time: string): { hours: number, minutes: number } => {
-      const [hours, minutes] = time.split(':').map((part) => parseInt(part, 10));
-      return { hours, minutes };
-    };
-  
-    const formattedStartTime = extractTime(startTime);
-    const formattedEndTime = extractTime(endTime);
-  
-    // Now use the formatted time objects for the meeting
     const formattedNewMeeting: Imeeting = {
       ...newMeeting,
-      startTime: formattedStartTime,
-      endTime: formattedEndTime,
+      startTime: newMeeting.startTime,  // Keep as string 'HH:mm'
+      endTime: newMeeting.endTime,      // Keep as string 'HH:mm'
     };
-  
-    console.log('Formatted meeting data before sending to backend:', formattedNewMeeting);
-  
-  
+
     this.globalService.addMeeting(formattedNewMeeting).subscribe(
       (addedMeeting: Imeeting) => {
         this.meetings.push(addedMeeting);
         this.filteredMeetings = [...this.meetings];
-
-        this.filteredMeetings.sort((a, b) => {
-          const dateA = new Date(`${a.date}T${a.startTime.hours}:${a.startTime.minutes}`);
-          const dateB = new Date(`${b.date}T${b.startTime.hours}:${b.startTime.minutes}`);
-          return dateA.getTime() - dateB.getTime();
-        });
-
         this.meetingsForm.reset();
         this.showForm = false;
       },
@@ -174,25 +144,28 @@ export class MeetingsComponent implements OnInit {
     );
   }
 
-  removeMeeting(meeting: Imeeting): void {
-    const index = this.meetings.indexOf(meeting);
-    if (index !== -1) {
-      this.meetings.splice(index, 1);
-    }
-  }
-
   addAttendee(): void {
     this.attendees.push(this.fb.control('', Validators.email));
   }
 
   removeAttendee(index: number): void {
-    if (this.attendees.length > 1) {
-      this.attendees.removeAt(index);
-    }
+    this.attendees.removeAt(index);
+  }
+
+  showAddMeetingForm(): void {
+    this.showForm = true;
   }
 
   cancelForm(): void {
     this.showForm = false;
     this.meetingsForm.reset();
   }
+
+  // Assuming `meeting.startTime` and `meeting.endTime` are in 'HH:mm' format (e.g., '09:00')
+
+// formatTime(time: string): { hours: number, minutes: number } {
+//   const [hours, minutes] = time.split(':').map(num => parseInt(num, 10));
+//   return { hours, minutes };
+// }
+
 }

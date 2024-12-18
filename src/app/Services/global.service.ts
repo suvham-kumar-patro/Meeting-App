@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class GlobalService {
-  private apiUrl = "http://localhost:5000"; 
+  private apiUrl = "https://localhost:7150"; 
   constructor(private http: HttpClient) {}
 
   // getCalenderItems(date:string)
@@ -16,12 +16,12 @@ export class GlobalService {
   // }
 
   getMeetings() {
-    return this.http.get<Imeeting[]>(`${this.apiUrl}/api/meetings`);
+    return this.http.get<Imeeting[]>(`${this.apiUrl}/api/Meetings`);
   }
 
   addMeeting(meetingData: Omit<Imeeting, 'id'>): Observable<Imeeting> {
     return this.http.post<Imeeting>(
-      `${this.apiUrl}/api/meetings`, meetingData, {
+      `${this.apiUrl}/api/Meetings`, meetingData, {
         headers:{
           'Content-Type': 'application/json' 
         }

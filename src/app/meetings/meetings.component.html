@@ -41,7 +41,7 @@
     <form [formGroup]="meetingsForm" (ngSubmit)="addMeeting()">
       <div class="row g-3">
         <div class="col-md-6">
-          <label for="title" class="form-label">Title</label>
+          <label for="name" class="form-label">Title</label>
           <input type="text" class="form-control" formControlName="name" id="name" placeholder="Meeting Title" />
         </div>
         <div class="col-md-6">
@@ -100,30 +100,16 @@
       <div *ngFor="let meeting of filteredMeetings" class="card mb-3">
         <div class="card-body">
           <h5 class="card-title">
-            {{ meeting.date | date: 'fullDate' }} {{ meeting.startTime.hours | number: '2.0' }}:{{ meeting.startTime.minutes | number: '2.0' }} -
-            {{ meeting.endTime.hours | number: '2.0' }}:{{ meeting.endTime.minutes | number: '2.0' }}
-          </h5>
+            {{ meeting.date | date: 'fullDate' }}
+            {{ meeting.startTime.split(':')[0] | number: '2.0' }}:{{ meeting.startTime.split(':')[1] | number: '2.0' }} -
+            {{ meeting.endTime.split(':')[0] | number: '2.0' }}:{{ meeting.endTime.split(':')[1] | number: '2.0' }}
+          </h5>          
           <p class="card-text">
             <span class="badge bg-danger me-2">{{ meeting.name }}</span>
+            {{ meeting.description }}
             <strong>Attendees:</strong>
             {{ getFormattedAttendees(meeting) }}
           </p>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <select class="form-select" (change)="selectAttendee($event, meeting)">
-                <option selected>Select member</option>
-                <option *ngFor="let attendee of meeting.attendees" [value]="attendee.email">
-                  {{ attendee.email }}
-                </option>
-              </select>
-            </div>
-            <div class="col-md-2">
-              <button class="btn btn-primary w-100" (click)="addMember(meeting)">Add</button>
-            </div>
-            <div class="col-md-4">
-              <button class="btn btn-danger w-100" (click)="excuseYourself(meeting)">Excuse yourself</button>
-            </div>
-          </div>
         </div>
       </div>
     </div>

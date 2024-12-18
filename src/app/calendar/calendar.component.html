@@ -19,20 +19,14 @@
         <div class="time-label me-3">{{ time }}</div>
         
         <div class="flex-fill">
-          <!-- Call getMeetingsForSlot and group meetings -->
-          <ng-container *ngIf="getMeetingForSlot(time) as meetings">
-            <div *ngIf="meetings.length > 0" class="meetings-group d-flex flex-wrap gap-2">
-
+          <ng-container *ngIf="getMeetingsForSlot(time) as meetings">
             <div class="meetings-group d-flex flex-wrap gap-2">
               <div *ngFor="let meeting of meetings" class="meeting-box p-2 border rounded" [style.background-color]="'#d4edda'">
                 <div class="meeting-title font-weight-bold">{{ meeting.name }}</div>
-                <div class="meeting-attendees">Attendees: {{ meeting.attendees.length }} members</div>
+                <div class="meeting-time">{{ meeting.startTime }} - {{ meeting.endTime }}</div>
+                <div class="meeting-attendees">Attendees: {{ meeting.attendees || 0 }} members</div>
               </div>
             </div>
-            </div>
-            <!-- <div *ngIf="meetings.length === 0" class="no-meetings-message">
-              No meetings scheduled for this time.
-            </div> -->
           </ng-container>
         </div>
       </div>
