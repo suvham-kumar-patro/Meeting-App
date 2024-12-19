@@ -1,8 +1,8 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
   <div class="auth-container card p-4 shadow-sm">
     <h2 class="text-center mb-4">{{ isRegisterMode ? 'Register' : 'Login' }}</h2>
-    <form (ngSubmit)="onSubmit()" #authForm="ngForm">
-      <div class="mb-3" *ngIf="isRegisterMode">
+    <form (ngSubmit)="onSubmit(authForm)" #authForm="ngForm">
+      <!-- <div class="mb-3" *ngIf="isRegisterMode">
         <label for="username" class="form-label">Username</label>
         <input
           type="text"
@@ -11,14 +11,14 @@
           class="form-control"
           [(ngModel)]="authData.username"
           required
-        />
-      </div>
+        /> -->
+      <!-- </div> -->
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input
           type="email"
           id="email"
-          name="email"
+          name="username"
           class="form-control"
           [(ngModel)]="authData.email"
           required

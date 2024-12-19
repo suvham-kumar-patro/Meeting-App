@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService, ICredentials} from '../common/auth/auth.service';
@@ -11,13 +11,13 @@ import { AuthenticationService, ICredentials} from '../common/auth/auth.service'
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
-  credentials: ICredentials = {
-    username: 'skp@gmail.com',
-    password: 'Skp@123!',
-  };
+  // credentials: ICredentials = {
+  //   username: 'charu@gmail.com',
+  //   password: 'Skp@123!',
+  // };
   registerCredentials: ICredentials = {
-    username: 'skp1@gmail.com',
-    password: 'Skp@123!',
+    username: '',
+    password: '',
     roles: ['Writer'],
   };
   isRegisterMode = false; // Default to Login mode
@@ -53,12 +53,17 @@ export class LoginComponent implements OnInit {
   }
  
  
-  onSubmit() {
+  onSubmit(formDetails:NgForm) {
+    const newUser=formDetails.value
+    console.log(newUser)
+
     if (this.isRegisterMode) {
       // Handle registration logic
-      console.log('Registered with:', this.registerCredentials);
-      this.authenticationService.register(this.registerCredentials).subscribe({
+      // console.log('Registered with:', this.registerCredentials);
+      this.authenticationService.register(newUser).subscribe({
         next: (data) => {
+          alert('Registered successfully! Please log in.');
+          // console.log(data)
           this.router.navigate(['/login']);
         },
         error: (error) => {
@@ -66,9 +71,10 @@ export class LoginComponent implements OnInit {
         },
       });
     } else {
-      console.log('Logging in with:', this.credentials);
-      this.authenticationService.login(this.credentials).subscribe({
+      // console.log('Logging in with:', this.credentials);
+      this.authenticationService.login(newUser).subscribe({
         next: (data) => {
+          console.log(data)
           this.router.navigate(['/calendar']);
         },
         error: (error) => {

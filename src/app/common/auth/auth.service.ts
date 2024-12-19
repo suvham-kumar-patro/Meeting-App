@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IUser } from '../../Models/IUser';
 
 const apiUrl = 'https://localhost:7150';
 
@@ -56,10 +57,11 @@ export class AuthenticationService {
       );
   }
 
-  register(credentials: ICredentials) {
+  register(credentials: Omit<IUser,'id'|'token'>) {
     return this.http
       .post(`${apiUrl}/api/Auth/Register`, credentials, {
         headers: { 'Content-Type': 'application/json' },
+       
       })
       .pipe(
         map((resp) => {

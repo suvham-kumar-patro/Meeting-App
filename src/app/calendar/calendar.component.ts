@@ -48,7 +48,7 @@ export class CalendarComponent {
         const meetingStartTime = meeting.startTime;
         const meetingEndTime = meeting.endTime;
         return (
-          meetingStartTime <= time && meetingEndTime > time
+          meetingStartTime <= time && meetingStartTime >= time
         );
       });
     }
