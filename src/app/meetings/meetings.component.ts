@@ -42,6 +42,7 @@ export class MeetingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadAttendees();
+    this.loadMeetings();
     
     
   }
@@ -51,9 +52,20 @@ export class MeetingsComponent implements OnInit {
   }
 
   excuseYourself(meeting: Imeeting): void {
-    console.log(`Excused from meeting: ${meeting.name}`);
-   
-    this.filteredMeetings = [...this.meetings];
+    const id = {
+      meetingId: meeting.id,
+    }
+    this.globalService.removeAttendee(id).subscribe(
+      (response) => {
+        console.log('You have been excused from the meeting:', meeting.name);
+        this.meetings = this.meetings.filter(m => m.id !== meeting.id);   
+        this.filteredMeetings = [...this.meetings];
+      },
+      (error) => {
+        console.error('Error removing attendee:', error);
+        alert('An error occurred while excusing yourself from the meeting.');
+      }
+    );
   }
  
   addMember(meeting: Imeeting): void {
@@ -77,6 +89,8 @@ export class MeetingsComponent implements OnInit {
       }
     );
   }
+
+  
 
   loadAttendees(): void {
     this.http.get<any[]>('https://localhost:7150/api/Attendee/users').subscribe({
@@ -117,7 +131,7 @@ export class MeetingsComponent implements OnInit {
 
   onSearch(): void {
     const { date, keywords } = this.searchForm.value;
-    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    const today = new Date().toISOString().split('T')[0]; 
 
     this.filteredMeetings = this.meetings.filter((meeting) => {
       const matchesDate =
